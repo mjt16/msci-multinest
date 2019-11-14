@@ -12,7 +12,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
-#from pymultinest.solve import solve
+from pymultinest.solve import solve
 import os
 try: os.mkdir('chains')
 except OSError: pass
