@@ -8,11 +8,11 @@ Created on Thu Nov 14 14:34:02 2019
 # nested sampling script
 
 #importing modules
+from __future__ import absolute_import, unicode_literals, print_function
 from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
-from __future__ import absolute_import, unicode_literals, print_function
-from pymultinest.solve import solve
+#from pymultinest.solve import solve
 import os
 try: os.mkdir('chains')
 except OSError: pass
@@ -25,22 +25,26 @@ def absorption(amp, x0, width): # signal 21cm absorption dip, defined as a negat
     return -amp*np.exp((-(freq-x0)**2)/(2*width**2))
 
 def foreground(coeffs): # signal foreground
+    freq_0 = 75.0
     l = len(coeffs)
     p = np.arange(0,l,1)
     freq_arr = np.transpose(np.multiply.outer(np.full(l,1), freq))
-    pwrs = np.power(freq_arr, p)
+    normfreq = freq_arr/freq_0
+    log_arr = np.log(normfreq)
+    pwrs = np.power(log_arr, p)
     ctp = coeffs*pwrs
-    return np.sum(ctp,(1)) 
+    log_t = np.sum(ctp,(1)) 
+    return np.exp(log_t)
 
 def addnoise(data, int_time): # add noise to signal
     return data + data/(np.sqrt((freq[1]-freq[0])*(int_time)))
 
 # creating simulated foreground data using EDGES foreground; see edgesfit.py
-a0 = 47052.32658584365
-a1 = -1844.967333964787
-a2 = 29.265792826929875
-a3 = -0.21536464292060956
-a4 = 0.0006102144740830822
+a0 = 7.467527122442775
+a1 = -2.569712521825265
+a2 = -0.03731392522953101
+a3 = 0.049980346187051314
+a4 = 0.12055241703561778
 sim_coeffs = np.array([a0,a1,a2,a3,a4]) # simulated foreground coeffs
 
 # creating simulated 21cm data
