@@ -69,15 +69,24 @@ def log_likelihood(cube): # log likelihood function for model parameters theta, 
     return np.sum(np.log(lj)) # sum over all frequency bins
 
 def prior(cube):
-    cube[0]=-10**5 + 2*10**(cube[0]*5)
-    cube[1]=-4*10**5 + 2*4*10**(cube[1]*4)
-    cube[2]=-5*10**2 + 2*5*10**(cube[2]*2)
-    cube[3]=-10**2 + 2*10**(cube[3]*2)
-    cube[4]=-10**2 + 2*10**(cube[4]*2)
-    cube[5]=-10**3 + 2*10**(cube[5]*3)
-    cube[6]=-1 + 10**(cube[6]*3)
-    cube[7]=-1 + 10***(cube[7]*3)
-    return cube
+   for i in range(5):
+      cube[i]=-10+2*10**(cube[i]*2)
+   for i in range(5,8):
+      if i==6:
+         cube[i]=60+(30*cube[i])
+      else:
+         cube[i]=10*cube[i]
+   """ 
+   cube[0]=-1000 + 2*10**(cube[0]*3)
+   cube[1]=-4*10**5 + 2*4*10**(cube[1]*4)
+   cube[2]=-5*10**2 + 2*5*10**(cube[2]*2)
+   cube[3]=-10**2 + 2*10**(cube[3]*2)
+   cube[4]=-10**2 + 2*10**(cube[4]*2)
+   cube[5]=-10**3 + 2*10**(cube[5]*3)
+   cube[6]=-1 + 10**(cube[6]*3)
+   cube[7]=-1 + 10***(cube[7]*3)
+   """   
+   return cube
 
 # number of dimensions our problem has
 parameters = ["a0", "a1", "a2", "a3", "a4", "amp", "x0", "width"]
