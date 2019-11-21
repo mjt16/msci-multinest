@@ -48,7 +48,7 @@ a4 = 0.12055241703561778
 sim_coeffs = np.array([a0,a1,a2,a3,a4]) # simulated foreground coeffs
 
 # creating simulated 21cm data
-sim_amp = 0.5 # amplitude
+sim_amp = 1000 # amplitude
 sim_x0 = 78 # centre i.e. peak frequency
 sim_width = 8.1 # width
 
@@ -71,13 +71,18 @@ def log_likelihood(cube): # log likelihood function for model parameters theta, 
 def prior(cube):
    for i in range(5):
       cube[i]=-10+2*10**(cube[i])
+   cube[5]=2000*cube[5]
+   cube[6]=100*cube[6]
+   cube[7]=20*cube[7]
+   """
    for i in range(5,8):
       if i==6:
          cube[i]=(100*cube[i])
       else:
-         cube[i]=-10+20*cube[i]
+         cube[i]=200*cube[i]
+   """
    """ 
-   cube[0]=-1000 + 2*10**(cube[0]*3)
+   cube[0]=-1000 + 2*10**cube[0]*3)
    cube[1]=-4*10**5 + 2*4*10**(cube[1]*4)
    cube[2]=-5*10**2 + 2*5*10**(cube[2]*2)
    cube[3]=-10**2 + 2*10**(cube[3]*2)
