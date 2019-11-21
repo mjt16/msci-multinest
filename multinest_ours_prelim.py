@@ -70,12 +70,12 @@ def log_likelihood(cube): # log likelihood function for model parameters theta, 
 
 def prior(cube):
    for i in range(5):
-      cube[i]=-10+2*10**(cube[i]*2)
+      cube[i]=-10+2*10**(cube[i])
    for i in range(5,8):
       if i==6:
-         cube[i]=60+(30*cube[i])
+         cube[i]=(100*cube[i])
       else:
-         cube[i]=10*cube[i]
+         cube[i]=-10+20*cube[i]
    """ 
    cube[0]=-1000 + 2*10**(cube[0]*3)
    cube[1]=-4*10**5 + 2*4*10**(cube[1]*4)
