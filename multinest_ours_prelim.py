@@ -53,7 +53,7 @@ sim_amp = 0.5 # amplitude
 sim_x0 = 78 # centre i.e. peak frequency
 sim_width = 8.1 # width
 
-int_time = 1.6e8 # antennna integration time  
+int_time = 5.6e8 # antennna integration time  
 
 simulated_clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs)
 simulated = addnoise(simulated_clean, int_time)
@@ -72,10 +72,10 @@ def log_likelihood(cube): # log likelihood function for model parameters theta, 
 
 def prior(cube):
    for i in range(5):
-      cube[i]=-10+2*10*(cube[i])
-   cube[5]=cube[5]
-   cube[6]=100*cube[6]
-   cube[7]=20*cube[7]
+      cube[i]=-20+40*(cube[i])
+   cube[5]=-5+10*cube[5]
+   cube[6]=-100+200*cube[6]
+   cube[7]=-20+40*cube[7]
    """
    for i in range(5,8):
       if i==6:
