@@ -13,7 +13,7 @@ from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
 from pymultinest.solve import solve
-from pymultinest.run import run
+#from pymultinest.run import run
 import os
 try: os.mkdir('chains')
 except OSError: pass
@@ -26,7 +26,7 @@ def absorption(amp, x0, width): # signal 21cm absorption dip, defined as a negat
     return -amp*np.exp((-(freq-x0)**2)/(2*width**2))
 
 def foreground(coeffs): # signal foreground
-    freq_0 = 75.0
+    freq_0 = 1 # SORT THIS OUT!!!
     l = len(coeffs)
     p = np.arange(0,l,1)
     freq_arr = np.transpose(np.multiply.outer(np.full(l,1), freq))
@@ -63,11 +63,12 @@ def log_likelihood(cube): # log likelihood function for model parameters theta, 
     a0, a1, a2, a3, a4, amp, x0, width = cube # theta takes form of array of model parameters
     coeffs = [a0,a1,a2,a3,a4]
     model = absorption(amp, x0, width) + foreground(coeffs)
-    coeff = 1/(np.sqrt(2*pi*noise**2))
+    normalise = 1/(np.sqrt(2*pi*noise**2))
     numerator = (simulated - model)**2 # likelihood depends on difference between model and observed temperature in each frequency bin
     denominator = 2*noise**2
-    lj = coeff*np.exp(-numerator/denominator) 
-    return np.sum(np.log(lj)) # sum over all frequency bins
+    #lj = normalise*np.exp(-numerator/denominator)
+    return np.sum(np.log(normalise) - (numerator/denominator)) 
+    #return np.sum(np.log(lj)) # sum over all frequency bins
 
 def prior(cube):
    for i in range(5):
