@@ -13,6 +13,7 @@ from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
 from pymultinest.solve import solve
+from pymultinest.run import run
 import os
 try: os.mkdir('chains')
 except OSError: pass
@@ -48,16 +49,16 @@ a4 = 0.12055241703561778
 sim_coeffs = np.array([a0,a1,a2,a3,a4]) # simulated foreground coeffs
 
 # creating simulated 21cm data
-sim_amp = 1000 # amplitude
+sim_amp = 0.5 # amplitude
 sim_x0 = 78 # centre i.e. peak frequency
 sim_width = 8.1 # width
 
-int_time = 1600 # antennna integration time  
+int_time = 1.6e8 # antennna integration time  
 
 simulated_clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs)
 simulated = addnoise(simulated_clean, int_time)
 noise = simulated - simulated_clean
-
+print(noise)
 def log_likelihood(cube): # log likelihood function for model parameters theta, simulated data, and model data
     a0, a1, a2, a3, a4, amp, x0, width = cube # theta takes form of array of model parameters
     coeffs = [a0,a1,a2,a3,a4]
@@ -70,8 +71,8 @@ def log_likelihood(cube): # log likelihood function for model parameters theta, 
 
 def prior(cube):
    for i in range(5):
-      cube[i]=-20+2*20*(cube[i])
-   cube[5]=2000*cube[5]
+      cube[i]=-10+2*10*(cube[i])
+   cube[5]=cube[5]
    cube[6]=100*cube[6]
    cube[7]=20*cube[7]
    """
@@ -102,7 +103,9 @@ prefix = "testoutput1-"
 # run MultiNest
 result = solve(LogLikelihood=log_likelihood, Prior=prior, 
 	n_dims=n_params, outputfiles_basename=prefix, verbose=True)
-
+"""
+result = run(LogLikelihood=log_likelihood, Prior=prior, n_dims=n_params, n_live_points=1000, outputfiles_basename=prefix, resume=True, verbose=True)
+"""
 print()
 print('evidence: %(logZ).1f +- %(logZerr).1f' % result)
 print()
@@ -116,4 +119,3 @@ for name, col in zip(parameters, result['samples'].transpose()):
 import json
 with open('%sparams.json' % prefix, 'w') as f:
 	json.dump(parameters, f, indent=2)
-
