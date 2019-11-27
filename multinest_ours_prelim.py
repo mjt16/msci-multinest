@@ -26,7 +26,7 @@ def absorption(amp, x0, width): # signal 21cm absorption dip, defined as a negat
     return -amp*np.exp((-(freq-x0)**2)/(2*width**2))
 
 def foreground(coeffs): # signal foreground
-    freq_0 = 75 # SORT THIS OUT!!!
+    freq_0 = 78 # SORT THIS OUT!!!
     l = len(coeffs)
     p = np.arange(0,l,1)
     freq_arr = np.transpose(np.multiply.outer(np.full(l,1), freq))
@@ -53,7 +53,7 @@ sim_amp = 0.5 # amplitude
 sim_x0 = 78 # centre i.e. peak frequency
 sim_width = 8.1 # width
 
-int_time = 5.6e8 # antennna integration time  
+int_time = 1.6e8 # antennna integration time  
 
 simulated_clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs)
 simulated = addnoise(simulated_clean, int_time)
@@ -73,9 +73,9 @@ def log_likelihood(cube): # log likelihood function for model parameters theta, 
 def prior(cube):
    for i in range(5):
       cube[i]=-20+40*(cube[i])
-   cube[5]=-5+10*cube[5]
-   cube[6]=-100+200*cube[6]
-   cube[7]=-20+40*cube[7]
+   cube[5]=-2.5+2*2.5*cube[5]
+   cube[6]=-90+180*cube[6]
+   cube[7]=-10+20*cube[7]
    """
    for i in range(5,8):
       if i==6:
