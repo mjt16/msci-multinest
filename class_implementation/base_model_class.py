@@ -23,10 +23,10 @@ class model:
         pass
     
     def __repr__(self):
-        return f"(FG:{self.name_fg} + SIG:{self.name_sig} nu=[{np.min(self.freq)}, {np.max(self.freq)}])"
+        return "(FG:{self.name_fg} + SIG:{self.name_sig} nu=[{np.min(self.freq)}, {np.max(self.freq)}])"
 
     def __str__(self):
-        return f"(FG:{self.name_fg} + SIG:{self.name_sig} nu=[{np.min(self.freq)}, {np.max(self.freq)}])"
+        return "(FG:{self.name_fg} + SIG:{self.name_sig} nu=[{np.min(self.freq)}, {np.max(self.freq)}])"
 
     def observation(self, theta, withFG = True, withSIG = True):
         """
