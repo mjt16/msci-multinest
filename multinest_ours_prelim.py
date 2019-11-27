@@ -26,7 +26,7 @@ def absorption(amp, x0, width): # signal 21cm absorption dip, defined as a negat
     return -amp*np.exp((-(freq-x0)**2)/(2*width**2))
 
 def foreground(coeffs): # signal foreground
-    freq_0 = 1 # SORT THIS OUT!!!
+    freq_0 = 78 # SORT THIS OUT!!!
     l = len(coeffs)
     p = np.arange(0,l,1)
     freq_arr = np.transpose(np.multiply.outer(np.full(l,1), freq))
@@ -72,7 +72,7 @@ def log_likelihood(cube): # log likelihood function for model parameters theta, 
 
 def prior(cube):
    for i in range(5):
-      cube[i]=-10+2*10*(cube[i])
+      cube[i]=-10+20*(cube[i])
    cube[5]=cube[5]
    cube[6]=100*cube[6]
    cube[7]=20*cube[7]
