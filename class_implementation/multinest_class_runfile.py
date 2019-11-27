@@ -51,11 +51,13 @@ simulated_clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs
 simulated = addnoise(simulated_clean, int_time) # simulated data with noise
 noise = simulated - simulated_clean # noise values
 
+# DEFINING MODEL
+my_model = md.logpoly_plus_gaussian(freq) # model selected from model_database.py
+
 # DEFINING LOG LIKELIHOOD AND PRIORS
 def log_likelihood(cube): # log likelihood function
-    a0, a1, a2, a3, a4, amp, x0, width = cube#
-    coeffs = [a0,a1,a2,a3,a4]
-    model = absorption(amp, x0, width) + foreground(coeffs)
+    a0, a1, a2, a3, a4, amp, x0, width = cube
+    model = my_model.observation(cube)
     normalise = 1/(np.sqrt(2*pi*noise**2))
     numerator = (simulated - model)**2 # likelihood depends on difference between model and observed temperature in each frequency bin
     denominator = 2*noise**2
@@ -70,7 +72,6 @@ def prior(cube): # priors for model parameters
    cube[7]=20*cube[7]
    return cube
 
-model = md.logpoly_plus_gaussian(freq) # model selected from model_database.py
-multinest_object = multi.multinest_object(data=simulated, model=model, priors=prior, loglike=log_likelihood)
+multinest_object = multi.multinest_object(data=simulated, model=my_model, priors=prior, loglike=log_likelihood)
 
 multinest_object.solve_multinest()

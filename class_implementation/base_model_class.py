@@ -9,6 +9,7 @@ Created on Tue Nov 26 19:46:13 2019
 
 # Importing modules
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Base Model class
 class model:
@@ -21,7 +22,7 @@ class model:
         self.name_sig = "Base"
         self.labels = []  #list of names of parameters
         pass
-    
+
     def __repr__(self):
         return "(FG:{self.name_fg} + SIG:{self.name_sig} nu=[{np.min(self.freq)}, {np.max(self.freq)}])"
 
@@ -32,7 +33,6 @@ class model:
         """
         Return the full modelled observation
         """
-
         sig = 0.0
         fg =0.0
 
@@ -43,6 +43,20 @@ class model:
             fg = self.foreground(theta)
 
         return sig + fg
+
+    def plot_observation(self, theta, withFG=True, withSIG=True, style='b-'):
+        """
+        Plots signal over frequency range
+        """
+        y_vals = self.observation(theta, withFG, withSIG)
+        x_vals = self.freq
+        style = 'b-'
+
+        plt.figure()
+        plt.plot(x_vals, y_vals, style)
+        plt.xlabel("Frequency/MHz")
+        plt.ylabel("Brightness Temperature/K")
+        plt.show()
 
     def foreground(self, theta):
         """ Calculate foreground model
