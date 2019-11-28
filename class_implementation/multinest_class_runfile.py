@@ -10,6 +10,7 @@ import model_database as md
 import implement_multinest as multi
 from math import pi
 import numpy as np
+import matplotlib.pyplot as plt  #this should be moved 
 
 freq = np.linspace(51.965332, 97.668457, 50) # frequency array for whole procedure
 
@@ -32,8 +33,10 @@ def foreground(coeffs): # signal foreground
     temp = np.exp(log_t)
     return temp
 
+"""
 def addnoise(data, int_time): # add noise to signal
     return data + data/(np.sqrt((freq[1]-freq[0])*(int_time)))
+"""
 
 # fiducial model parameters
 a0 = 7.467527122442775
@@ -48,8 +51,10 @@ sim_width = 8.1 # width
 int_time = 1.6e8 # antennna integration time  
 
 simulated_clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs) # simulated data without noise
-simulated = addnoise(simulated_clean, int_time) # simulated data with noise
-noise = simulated - simulated_clean # noise values
+#simulated = addnoise(simulated_clean, int_time) # simulated data with noise
+#noise = simulated - simulated_clean # noise values
+noise = np.random.normal(0, 10e-3, len(freq)) #add noise
+simulated = simulated_clean + noise
 
 # DEFINING MODEL
 my_model = md.logpoly_plus_gaussian(freq) # model selected from model_database.py
@@ -74,4 +79,9 @@ def prior(cube): # priors for model parameters
 
 multinest_object = multi.multinest_object(data=simulated, model=my_model, priors=prior, loglike=log_likelihood)
 
-multinest_object.solve_multinest()
+#multinest_object.solve_multinest()
+
+plt.figure()
+plt.plot(freq, noise, 'bo')
+plt.savefig("noisefig.png")
+
