@@ -8,6 +8,7 @@ Created on Tue Nov 26 23:55:54 2019
 # importing modules
 from __future__ import absolute_import, unicode_literals, print_function
 from pymultinest.solve import solve
+from pymultinest.analyse import Analyzer
 import os
 try: os.mkdir('chains')
 except OSError: pass
@@ -24,7 +25,7 @@ class multinest_object():
         self.loglike = loglike
         self.prefix = output_prefix
     
-    def solve_multinest(self):
+    def solve_multinest(self, create_analyzer=True):
         """
         Run pymultinest.solve, saving chain and parameter values
         """
@@ -44,4 +45,6 @@ class multinest_object():
         import json
         with open('%sparams.json' % self.prefix, 'w') as f:
             json.dump(parameters, f, indent=2)
+        if create_analyzer == True:
+            self.analyzer = Analyzer(n_params, outputfiles_basename=self.prefix)
         

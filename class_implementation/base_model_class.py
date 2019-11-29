@@ -59,7 +59,8 @@ class model:
         plt.show()
 
     def foreground(self, theta):
-        """ Calculate foreground model
+        """
+        Calculate foreground model
         """
         pass
 

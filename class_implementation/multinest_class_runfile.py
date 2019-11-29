@@ -5,6 +5,8 @@ Created on Wed Nov 27 00:14:51 2019
 @author: matth
 """
 
+# runfile for multinest stuff
+
 # importing modules
 import model_database as md
 import implement_multinest as multi
