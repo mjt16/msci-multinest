@@ -23,7 +23,7 @@ def absorption(amp, x0, width): # signal 21cm absorption dip, defined as a negat
     return -amp*np.exp((-(freq-x0)**2)/(2*width**2))
 
 def foreground(coeffs): # signal foreground
-    freq_0 = 75 # SORT THIS OUT!!!
+    freq_0 = 78 # SORT THIS OUT!!!
     l = len(coeffs)
     p = np.arange(0,l,1)
     freq_arr = np.transpose(np.multiply.outer(np.full(l,1), freq))
