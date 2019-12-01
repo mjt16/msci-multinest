@@ -23,7 +23,7 @@ def absorption(amp, x0, width): # signal 21cm absorption dip, defined as a negat
     return -amp*np.exp((-(freq-x0)**2)/(2*width**2))
 
 def foreground(coeffs): # signal foreground
-    freq_0 = 1 # SORT THIS OUT!!!
+    freq_0 = 75 # SORT THIS OUT!!!
     l = len(coeffs)
     p = np.arange(0,l,1)
     freq_arr = np.transpose(np.multiply.outer(np.full(l,1), freq))
@@ -55,7 +55,7 @@ int_time = 1.6e8 # antennna integration time
 simulated_clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs) # simulated data without noise
 #simulated = addnoise(simulated_clean, int_time) # simulated data with noise
 #noise = simulated - simulated_clean # noise values
-noise = np.random.normal(0, 10e-3, len(freq)) #add noise
+noise = np.random.normal(0, 10e-2, len(freq)) #add noise
 simulated = simulated_clean + noise
 
 # DEFINING MODEL
@@ -81,9 +81,8 @@ def prior(cube): # priors for model parameters
 
 multinest_object = multi.multinest_object(data=simulated, model=my_model, priors=prior, loglike=log_likelihood)
 
-#multinest_object.solve_multinest()
+multinest_object.solve_multinest()
 
 plt.figure()
 plt.plot(freq, noise, 'bo')
 plt.savefig("noisefig.png")
-
