@@ -48,7 +48,7 @@ sim_width = 8.1 # width
 int_time = 1.6e8 # antennna integration time  
 
 clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs)
-noise = np.random.normal(0, 5e-2, len(freq)) #add noise
+noise = np.random.normal(0, 10e-2, len(freq)) #add noise
 
 sim_signal = clean + noise
 
@@ -67,4 +67,4 @@ plt.plot(freq, noise, 'bo')
 plt.title("Simulated Noise")
 plt.xlabel("Frequency/MHz")
 plt.ylabel("Brightness Temperature/K")
-plt.savefig(".png")
+plt.savefig("subplots.png")
