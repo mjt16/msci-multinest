@@ -94,5 +94,4 @@ plt.plot(freq, model_signal.observation(final_vals, withFG=False), 'b-', label="
 plt.legend()
 plt.title("Model vs. Data (21cm only)")
 plt.xlabel("Frequency/MHz")
-plt.ylabel("Brightness Temperature/K")
 plt.savefig("model_vs_data.png")
