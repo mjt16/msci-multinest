@@ -81,7 +81,7 @@ model_signal = md.logpoly_plus_gaussian(freq)
 final_vals = numpy.array(paramlist)
 
 # PLOTTING MOCK DATA VS. CONVERGED MODEL
-plt.figure(figsize=(10,10))
+plt.figure(figsize=(10,5))
 plt.subplot(1,3,1)
 plt.plot(freq, sim_signal, 'ro', label="mock")
 plt.plot(freq, model_signal.observation(final_vals), 'b-', label="model")
