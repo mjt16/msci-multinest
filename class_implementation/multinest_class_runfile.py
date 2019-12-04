@@ -55,7 +55,7 @@ int_time = 1.6e8 # antennna integration time
 simulated_clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs) # simulated data without noise
 #simulated = addnoise(simulated_clean, int_time) # simulated data with noise
 #noise = simulated - simulated_clean # noise values
-noise = np.random.normal(0, 1e-4, len(freq)) #add noise
+noise = np.random.normal(0, 10e-2, len(freq)) #add noise
 simulated = simulated_clean + noise
 
 # DEFINING MODEL
@@ -73,8 +73,8 @@ def log_likelihood(cube): # log likelihood function
     
 def prior(cube): # priors for model parameters
    for i in range(5):
-      cube[i]=-15+2*15*(cube[i])
-   cube[5]=-1 + 2*1*cube[5]
+      cube[i]=-12+2*12*(cube[i])
+   cube[5]=-1+2*cube[5]
    cube[6]=100*cube[6]
    cube[7]=20*cube[7]
    return cube
@@ -82,8 +82,6 @@ def prior(cube): # priors for model parameters
 multinest_object = multi.multinest_object(data=simulated, model=my_model, priors=prior, loglike=log_likelihood)
 
 multinest_object.solve_multinest()
-
-a=multinest_object.get_mode_stats()
 
 plt.figure()
 plt.plot(freq, noise, 'bo')
