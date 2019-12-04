@@ -55,7 +55,7 @@ int_time = 1.6e8 # antennna integration time
 simulated_clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs) # simulated data without noise
 #simulated = addnoise(simulated_clean, int_time) # simulated data with noise
 #noise = simulated - simulated_clean # noise values
-noise = np.random.normal(0, 10e-2, len(freq)) #add noise
+noise = np.random.normal(0, 5e-2, len(freq)) #add noise
 simulated = simulated_clean + noise
 
 # DEFINING MODEL
