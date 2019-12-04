@@ -79,12 +79,16 @@ absorb = sim_stuff[1]
 # GETTING CONVERGED MODEL
 model_signal = md.logpoly_plus_gaussian(freq)
 final_vals = numpy.array(paramlist)
+mod_signal = model_signal.observation(final_vals)
+
+# CALCULATING RESIDUALS
+residuals = (sim_signal-mod_signal)/sim_signal
 
 # PLOTTING MOCK DATA VS. CONVERGED MODEL
-plt.figure(figsize=(10,5))
+plt.figure(figsize=(20,10))
 plt.subplot(1,3,1)
 plt.plot(freq, sim_signal, 'ro', label="mock")
-plt.plot(freq, model_signal.observation(final_vals), 'b-', label="model")
+plt.plot(freq, mod_signal, 'b-', label="model")
 plt.legend()
 plt.title("Model vs. Data (full range)")
 plt.xlabel("Frequency/MHz")
@@ -96,7 +100,8 @@ plt.legend()
 plt.title("Model vs. Data (21cm only)")
 plt.xlabel("Frequency/MHz")
 plt.subplot(1,3,3)
-plt.plot(freq, sim_signal-model_signal.observation(final_vals), 'b-')
+plt.plot(freq, residuals, 'b-')
 plt.title("Residuals (full range)")
 plt.xlabel("Frequency/MHz")
+plt.subplots_adjust(wspace=0.3)
 plt.savefig("model_vs_data.png", dpi=200)
