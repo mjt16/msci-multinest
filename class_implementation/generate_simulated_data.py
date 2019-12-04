@@ -47,12 +47,14 @@ sim_x0 = 78 # centre i.e. peak frequency
 sim_width = 8.1 # width
 int_time = 1.6e8 # antennna integration time  
 
-clean = absorption(sim_amp, sim_x0, sim_width) + foreground(sim_coeffs)
+absorb = absorption(sim_amp, sim_x0, sim_width)
+foregd = foreground(sim_coeffs)
+clean = absorb + foregd
 noise = np.random.normal(0, 10e-2, len(freq)) #add noise
 
 sim_signal = clean + noise
 
-data = np.array([freq, sim_signal, noise])
+data = np.array([freq, absorb, foregd, noise, sim_signal])
 
 np.savetxt("sim_signal.txt", data, delimiter=",")
 

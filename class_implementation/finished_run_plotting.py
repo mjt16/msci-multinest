@@ -72,18 +72,25 @@ plt.close()
 # IMPORTING MOCK DATA
 sim_stuff=numpy.loadtxt("sim_signal.txt", delimiter=",")
 freq = sim_stuff[0]
-sim_signal = sim_stuff[1]
-noise = sim_stuff[2]
+sim_signal = sim_stuff[4]
+noise = sim_stuff[3]
+absorb = sim_stuff[1]
 
 # GETTING CONVERGED MODEL
 model_signal = md.logpoly_plus_gaussian(freq)
 final_vals = numpy.array(paramlist)
 
 # PLOTTING MOCK DATA VS. CONVERGED MODEL
-plt.figure()
-plt.plot(freq, sim_signal, 'k-')
-plt.plot(freq, model_signal.observation(final_vals), 'g--', alpha=0.8)
-plt.title("Comparison of Model to Data")
+plt.subplot(1,2,1)
+plt.plot(freq, sim_signal, 'ro')
+plt.plot(freq, model_signal.observation(final_vals), 'b-')
+plt.title("Comparison of Model to Data (full range)")
+plt.xlabel("Frequency/MHz")
+plt.ylabel("Brightness Temperature/K")
+plt.subplot(1,2,2)
+plt.plot(freq, absorb, 'ro')
+plt.plot(freq, model_signal.observation(final_vals, withFG=False), 'b-')
+plt.title("Comparison of Model to Data (21cm only)")
 plt.xlabel("Frequency/MHz")
 plt.ylabel("Brightness Temperature/K")
 plt.savefig("model_vs_data.png")
