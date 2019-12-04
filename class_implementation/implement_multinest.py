@@ -36,8 +36,10 @@ class multinest_object():
         print('evidence: %(logZ).1f +- %(logZerr).1f' % result)
         print()
         print('parameter values:')
+        self.params = []
         for name, col in zip(parameters, result['samples'].transpose()):
-        	print('%15s : %.3f +- %.3f' % (name, col.mean(), col.std()))
+            self.params.append(col.mean())
+            print('%15s : %.3f +- %.3f' % (name, col.mean(), col.std()))
             
         # make marginal plots by running:
         # $ python multinest_marginals.py chains/3-
@@ -47,4 +49,6 @@ class multinest_object():
             json.dump(parameters, f, indent=2)
         if create_analyzer == True:
             self.analyzer = Analyzer(n_params, outputfiles_basename=self.prefix)
-        
+
+    def get_mode_stats(self):
+        return self.analyzer.get_mode_stats()        
