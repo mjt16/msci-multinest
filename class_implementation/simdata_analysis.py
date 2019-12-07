@@ -112,8 +112,8 @@ plt.subplot(1,3,2)
 for i in range(len(final)):
    a=numpy.concatenate((fg_vals,final[i]))
    if i==1:
-      plt.plot(freq, model_signal.observation(a, withFG=False), 'g-', alpha=0.8, label="error bars")
-   plt.plot(freq, model_signal.observation(a, withFG=False), 'g-', alpha=0.8)
+      plt.plot(freq, model_signal.observation(a, withFG=False), 'g-', alpha=0.6, label="error bars")
+   plt.plot(freq, model_signal.observation(a, withFG=False), 'g-', alpha=0.6)
 plt.plot(freq, absorb, 'ro', label="mock")
 plt.plot(freq, model_signal.observation(final_vals, withFG=False), 'b-', label="model")
 plt.legend()
