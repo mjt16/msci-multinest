@@ -29,7 +29,7 @@ class logpoly_plus_gaussian(bmc.model):
         """
         Log polynomial foreground up to 4th order
         """
-        freq_0 = 1 # SORT THIS OUT!!! pivot scale
+        freq_0 = 75 # SORT THIS OUT!!! pivot scale
         coeffs = theta[0:-3]
         l = len(coeffs)
         p = np.arange(0,l,1)
