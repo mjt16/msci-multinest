@@ -64,7 +64,7 @@ class bowman(bmc.model):
         pass
 
     def foreground(self, theta):
-	"""
+        """
         Linear polynomial foreground up to 4th order
         """
         freq_0 = 75
