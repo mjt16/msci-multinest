@@ -20,11 +20,11 @@ sim_signal = data[1]
 noise = np.random.normal(0, 10e-2, len(freq))
 
 # DEFINING MODEL
-my_model = md.logpoly_plus_gaussian(freq) # model selected from model_database.py
+my_model = md.bowman(freq) # model selected from model_database.py
 
 # DEFINING LOG LIKELIHOOD AND PRIORS
 def log_likelihood(cube): # log likelihood function
-    a0, a1, a2, a3, a4, amp, x0, width = cube
+    a0, a1, a2, a3, a4, amp, x0, width, tau = cube
     model = my_model.observation(cube)
     normalise = 1/(np.sqrt(2*pi*noise**2))
     numerator = (sim_signal - model)**2 # likelihood depends on difference between model and observed temperature in each frequency bin
@@ -38,6 +38,7 @@ def prior(cube): # priors for model parameters
    cube[5]=cube[5]
    cube[6]=100*cube[6]
    cube[7]=20*cube[7]
+   cube[8]=20*cube[8]
    return cube
 
 multinest_object = multi.multinest_object(data=sim_signal, model=my_model, priors=prior, loglike=log_likelihood, output_prefix="edgesoutput-")
