@@ -73,7 +73,7 @@ class bowman(bmc.model):
         freq_0 = 75
         coeffs = theta[0:-4]
         l = len(coeffs)
-        p = [-2.5, -1.5, -0.5, -0.5, 1.5]
+        p = np.array([-2.5, -1.5, -0.5, -0.5, 1.5])
         freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
         normfreq = freq_arr/freq_0
         pwrs - np.power(normfreq, p)
