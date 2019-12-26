@@ -63,6 +63,35 @@ class bowman(bmc.model):
         self.labels = ["a0","a1","a2","a3","a4","amp","x0","width"]
         pass
 
-    # need to add foredground and signal functions
+    def foreground(self, theta):
+	"""
+        Linear polynomial foreground up to 4th order
+        """
+        freq_0 = 75
+        coeffs = theta[0:-4]
+	l = len(coeffs)
+	p = [-2.5, -1.5, -0.5, -0.5, 1.5]
+	freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+	normfreq = freq_arr/freq_0
+	pwrs - np.power(normfreq, p)
+	ctp = coeffs*pwrs
+	fg = np.sum(ctp, (1))
+	return fg
+
+    def signal(self, theta):
+	"""
+	Flattened Gaussian
+	"""
+	amp = theta[-4]
+	x0 = theta[-3]
+	width = theta[-2]
+	tau = theta[-1]
+
+	B = 4.0 * np.power((self.freq - x0), 2.0)/width**2
+	B *= np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+
+	t21 - -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+
+	return t21
 
 # add more models here
