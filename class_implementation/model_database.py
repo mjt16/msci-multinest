@@ -54,6 +54,9 @@ class logpoly_plus_gaussian(bmc.model):
 class bowman(bmc.model):
     """
     Model used by Bowman in 2018 paper eq.2
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, amp, x0, width, tau] 
     """
 
     def __init__(self, freq):
@@ -87,10 +90,9 @@ class bowman(bmc.model):
         width = theta[-2]
         tau = theta[-1]
 
-        B = (4.0 * np.power((self.freq - x0), 2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+        B = (4.0 * ((self.freq - x0)**2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
 
         t21 - -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
-
         return t21
 
 # add more models here
