@@ -53,14 +53,14 @@ class logpoly_plus_gaussian(bmc.model):
 
 class bowman(bmc.model):
     """
-    Model used by Bowman in 2018 paper eq.1
+    Model used by Bowman in 2018 paper eq.2
     """
 
     def __init__(self, freq):
         self.freq = freq
-        self.name_fg = "log_poly_4"
-        self.name_sig = "gaussian"
-        self.labels = ["a0","a1","a2","a3","a4","amp","x0","width"]
+        self.name_fg = "polynomial"
+        self.name_sig = "flat gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","amp","x0","width","tau"]
         pass
 
     def foreground(self, theta):
@@ -69,29 +69,28 @@ class bowman(bmc.model):
         """
         freq_0 = 75
         coeffs = theta[0:-4]
-	l = len(coeffs)
-	p = [-2.5, -1.5, -0.5, -0.5, 1.5]
-	freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
-	normfreq = freq_arr/freq_0
-	pwrs - np.power(normfreq, p)
-	ctp = coeffs*pwrs
-	fg = np.sum(ctp, (1))
-	return fg
+        l = len(coeffs)
+        p = [-2.5, -1.5, -0.5, -0.5, 1.5]
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs - np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
 
     def signal(self, theta):
-	"""
-	Flattened Gaussian
-	"""
-	amp = theta[-4]
-	x0 = theta[-3]
-	width = theta[-2]
-	tau = theta[-1]
+        """
+        Flattened Gaussian
+        """
+        amp = theta[-4]
+        x0 = theta[-3]
+        width = theta[-2]
+        tau = theta[-1]
 
-	B = 4.0 * np.power((self.freq - x0), 2.0)/width**2
-	B *= np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+        B = (4.0 * np.power((self.freq - x0), 2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
 
-	t21 - -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+        t21 - -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
 
-	return t21
+        return t21
 
 # add more models here
