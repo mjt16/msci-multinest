@@ -92,7 +92,7 @@ class bowman(bmc.model):
 
         B = (4.0 * ((self.freq - x0)**2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
 
-        t21 - -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+        t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
         return t21
 
 # add more models here
