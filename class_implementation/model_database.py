@@ -95,4 +95,45 @@ class bowman(bmc.model):
         t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
         return t21
 
+class hills_sine(bmc.model):
+    """
+    Model used by Hills in 2018
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, a5, amp, phi, l] 
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_5th"
+        self.name_sig = "sine function"
+        self.labels = ["a0","a1","a2","a3","a4","a5","amp","phi","l"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 5th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-3]
+        l = len(coeffs)
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5, 2.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def signal(self, theta):
+        """
+        Sine function
+        """
+        amp = theta[-3]
+        phi = theta[-2]
+        l = theta[-1]
+
+        t21 =  amp * np.sin(2*np.pi*self.freq/l + phi)
+        return t21
+
 # add more models here
