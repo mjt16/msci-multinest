@@ -70,7 +70,7 @@ plt.savefig(prefix + 'corner.png')
 plt.close()
 
 # IMPORTING MOCK DATA
-sim_stuff=numpy.loadtxt("edges.txt", delimiter=",")
+sim_stuff=numpy.loadtxt("edges_restricted.txt", delimiter=",")
 freq = sim_stuff[0]
 sim_signal = sim_stuff[1]
 

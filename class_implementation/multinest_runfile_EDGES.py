@@ -14,7 +14,7 @@ from math import pi
 import numpy as np
 
 # IMPORTING SIMULATED DATA
-data = np.loadtxt("edges.txt", delimiter=",")
+data = np.loadtxt("edges_restricted.txt", delimiter=",")
 freq = data[0]
 sim_signal = data[1]
 noise = np.random.normal(0, 10e-2, len(freq))
@@ -41,7 +41,7 @@ def prior(cube): # priors for model parameters
    cube[8]=10*cube[8]
    return cube
 
-multinest_object = multi.multinest_object(data=sim_signal, model=my_model, priors=prior, loglike=log_likelihood, output_prefix="edgesoutput-")
+multinest_object = multi.multinest_object(data=sim_signal, model=my_model, priors=prior, loglike=log_likelihood, output_prefix="edgesoutputrestricted-")
 
 multinest_object.solve_multinest()
 
