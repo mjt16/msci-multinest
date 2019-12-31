@@ -16,7 +16,6 @@ import numpy as np
 # IMPORTING SIMULATED DATA
 data = np.loadtxt("edges.txt", delimiter=",")
 freq = data[0]
-#freq = np.linspace(61, 98, 50)
 sim_signal = data[1]
 noise = np.random.normal(0, 10e-2, len(freq))
 
@@ -35,7 +34,7 @@ def log_likelihood(cube): # log likelihood function
     
 def prior(cube): # priors for model parameters
    for i in range(5):
-      cube[i]=-500+2*500*(cube[i])
+      cube[i]=-100+2*1000*(cube[i])
    cube[5]=cube[5]
    cube[6]=100*cube[6]
    cube[7]=35*cube[7]
