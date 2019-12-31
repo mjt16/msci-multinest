@@ -75,7 +75,7 @@ freq = sim_stuff[0]
 sim_signal = sim_stuff[1]
 
 # GETTING CONVERGED MODEL
-model_signal = md.logpoly_plus_gaussian(freq)
+model_signal = md.bowman(freq)
 final_vals = numpy.array(paramlist)
 mod_signal = model_signal.observation(final_vals)
 
