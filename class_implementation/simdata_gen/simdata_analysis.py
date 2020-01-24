@@ -13,6 +13,7 @@ import json
 import pymultinest
 import corner
 import model_database as md
+import itertools
 
 if len(sys.argv) != 2:
 	sys.stderr.write("""SYNOPSIS: %s <output-root> 
@@ -43,11 +44,13 @@ print('  marginal likelihood:')
 print('    ln Z = %.1f +- %.1f' % (s['global evidence'], s['global evidence error']))
 print('  parameters:')
 paramlist = [] # for plotting model vs data
+errlist = [] # for error bars on plot
 for p, m in zip(parameters, s['marginals']):
 	lo, hi = m['1sigma']
 	med = m['median']
 	paramlist.append(med)
 	sigma = (hi - lo) / 2
+	errlist.append(sigma)
 	if sigma == 0:
 		i = 3
 	else:
@@ -80,7 +83,19 @@ absorb = sim_stuff[1]
 model_signal = md.logpoly_plus_gaussian(freq)
 final_vals = numpy.array(paramlist)
 mod_signal = model_signal.observation(final_vals)
-
+errors = numpy.array(errlist)
+errors = numpy.array(errors[5:8])
+sig_vals = numpy.array(final_vals[5:8])
+fg_vals = numpy.array(final_vals[0:5])
+maxs = sig_vals + errors
+mins = sig_vals - errors
+both = numpy.array([mins,maxs]).transpose()
+amps=both[0]
+xs=both[1]
+widths=both[2]
+combs = [amps,xs,widths]
+final = list(itertools.product(*combs))
+print(final)
 # CALCULATING RESIDUALS
 residuals = (sim_signal-mod_signal)/sim_signal
 
@@ -94,6 +109,11 @@ plt.title("Model vs. Data (full range)")
 plt.xlabel("Frequency/MHz")
 plt.ylabel("Brightness Temperature/K")
 plt.subplot(1,3,2)
+for i in range(len(final)):
+   a=numpy.concatenate((fg_vals,final[i]))
+   if i==1:
+      plt.plot(freq, model_signal.observation(a, withFG=False), 'g-', alpha=0.6, label="error bars")
+   plt.plot(freq, model_signal.observation(a, withFG=False), 'g-', alpha=0.6)
 plt.plot(freq, absorb, 'ro', label="mock")
 plt.plot(freq, model_signal.observation(final_vals, withFG=False), 'b-', label="model")
 plt.legend()
