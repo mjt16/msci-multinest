@@ -17,7 +17,7 @@ import numpy as np
 data = np.loadtxt("edges.txt", delimiter=",")
 freq = data[0]
 signal = data[1]
-noise = np.random.normal(0, 10e-2, len(freq))
+noise = np.random.normal(0, 0.5*10e-2, len(freq))
 
 # DEFINING MODEL
 my_model = md.bowman(freq) # model selected from model_database.py
