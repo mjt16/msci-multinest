@@ -16,7 +16,7 @@ import numpy as np
 # IMPORTING DATA
 data = np.loadtxt("sim_signal.txt", delimiter=",")
 freq = data[0]
-sim_signal = data[1]
+signal = data[1]
 noise = data[2]
 
 # DEFINING MODEL
@@ -27,7 +27,7 @@ def log_likelihood(cube): # log likelihood function
     a0, a1, a2, a3, a4, amp, x0, width = cube
     model = my_model.observation(cube)
     normalise = 1/(np.sqrt(2*pi*noise**2))
-    numerator = (sim_signal - model)**2 # likelihood depends on difference between model and observed temperature in each frequency bin
+    numerator = (signal - model)**2 # likelihood depends on difference between model and observed temperature in each frequency bin
     denominator = 2*noise**2
     loglike = np.sum(np.log(normalise) - (numerator/denominator))
     return loglike
@@ -40,7 +40,7 @@ def prior(cube): # priors for model parameters
    cube[7]=20*cube[7]
    return cube
 
-multinest_object = multi.multinest_object(data=sim_signal, model=my_model, priors=prior, loglike=log_likelihood)
+multinest_object = multi.multinest_object(data=signal, model=my_model, priors=prior, loglike=log_likelihood)
 
 if __name__ == "__main__":
     multinest_object.solve_multinest()
