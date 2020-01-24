@@ -14,6 +14,7 @@ import pymultinest
 import corner
 import model_database as md
 import itertools
+from importlib import import_module
 
 if len(sys.argv) != 2:
 	sys.stderr.write("""SYNOPSIS: %s <output-root>
@@ -79,7 +80,7 @@ plt.savefig(prefix[:-1] + "_results/" + prefix + 'corner.png')
 plt.close()
 
 # IMPORTING MOCK DATA
-sim_stuff=numpy.loadtxt("sim_signal.txt", delimiter=",")
+sim_stuff=numpy.loadtxt("sim_signal_hills.txt", delimiter=",")
 freq = sim_stuff[0]
 sim_signal = sim_stuff[4]
 noise = sim_stuff[3]
@@ -118,10 +119,10 @@ plt.subplot(1,3,2)
 for i in range(len(final)):
    a=numpy.concatenate((fg_vals,final[i]))
    if i==1:
-      plt.plot(freq, model_signal.observation(a, withFG=False), 'g-', alpha=0.6, label="error bars")
-   plt.plot(freq, model_signal.observation(a, withFG=False), 'g-', alpha=0.6)
+      plt.plot(freq, mymodel.observation(a, withFG=False), 'g-', alpha=0.6, label="error bars")
+   plt.plot(freq, mymodel.observation(a, withFG=False), 'g-', alpha=0.6)
 plt.plot(freq, absorb, 'ro', label="mock")
-plt.plot(freq, model_signal.observation(final_vals, withFG=False), 'b-', label="model")
+plt.plot(freq, mymodel.observation(final_vals, withFG=False), 'b-', label="model")
 plt.legend()
 plt.title("Model vs. Data (21cm only)")
 plt.xlabel("Frequency/MHz")
@@ -130,4 +131,4 @@ plt.plot(freq, residuals, 'b-')
 plt.title("Residuals (full range)")
 plt.xlabel("Frequency/MHz")
 plt.subplots_adjust(wspace=0.3)
-plt.savefig(prefix+"model_vs_data.png", dpi=200)
+plt.savefig(prefix[:-1] + "_results/"+ prefix+"model_vs_data.png", dpi=200)

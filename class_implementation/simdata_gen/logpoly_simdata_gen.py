@@ -38,7 +38,7 @@ foregd = mockmodel.observation(theta, withSIG=False)
 
 data = np.array([freq, absorb, foregd, noise, sim_signal])
 
-np.savetxt("sim_signal.txt", data, delimiter=",") # save data in a .txt file; this mimics the procedure when actual data is imported e.g. EDGES
+np.savetxt("sim_signal_logpoly.txt", data, delimiter=",") # save data in a .txt file; this mimics the procedure when actual data is imported e.g. EDGES
 
 # plotting mock signal and noise
 plt.subplot(1,2,1)
@@ -50,4 +50,4 @@ plt.subplot(1,2,2)
 plt.plot(freq, noise, 'bo')
 plt.title("Simulated Noise")
 plt.xlabel("Frequency/MHz")
-plt.savefig("mockdata.png")
+plt.savefig("mockdata_logpoly.png")
