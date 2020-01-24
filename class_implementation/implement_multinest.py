@@ -11,6 +11,7 @@ from pymultinest.solve import solve
 from pymultinest.analyse import Analyzer
 import os
 import sys
+import shutil
 try: os.mkdir('chains')
 except OSError: pass
 
@@ -46,10 +47,14 @@ class multinest_object():
         # $ python multinest_marginals.py chains/3-
         # For that, we need to store the parameter names:
         import json
-        with open('%sparams.json' % self.prefix, 'w') as f:
+        if not os.path.exists(self.prefix): 
+            os.mkdir(self.prefix)
+        with open(os.path.join(self.prefix, '%sparams.json' % self.prefix), 'w') as f:
             json.dump(parameters, f, indent=2)
         if create_analyzer == True:
             self.analyzer = Analyzer(n_params, outputfiles_basename=self.prefix)
-
+        for i in os.listdir('.'):
+            if self.prefix in i:
+                shutil.move(i,self.prefix+"/")
     def get_mode_stats(self):
         return self.analyzer.get_mode_stats()        

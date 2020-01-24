@@ -25,7 +25,7 @@ if len(sys.argv) != 2:
 
 prefix = sys.argv[1]
 print('model "%s"' % prefix)
-if not os.path.exists(prefix + 'params.json'):
+if not os.path.exists(prefix + "/" + prefix + 'params.json'):
 	sys.stderr.write("""Expected the file %sparams.json with the parameter names.
 For example, for a three-dimensional problem:
 
@@ -35,13 +35,13 @@ For example, for a three-dimensional problem:
 
 model_runfile=import_module(prefix[:-1])
 
-parameters = json.load(open(prefix + 'params.json'))
+parameters = json.load(open(prefix + "/" + prefix + 'params.json'))
 n_params = len(parameters)
 
-a = pymultinest.Analyzer(n_params = n_params, outputfiles_basename = prefix)
+a = pymultinest.Analyzer(n_params = n_params, outputfiles_basename = prefix + "/" + prefix)
 s = a.get_stats()
 
-json.dump(s, open(prefix + 'stats.json', 'w'), indent=4)
+json.dump(s, open(prefix + "/" + prefix + 'stats.json', 'w'), indent=4)
 
 print('  marginal likelihood:')
 print('    ln Z = %.1f +- %.1f' % (s['global evidence'], s['global evidence error']))
@@ -69,8 +69,11 @@ mask = weights > 1e-4
 
 corner.corner(data[mask,:], weights=weights[mask], 
 	labels=parameters, show_titles=True)
-plt.savefig(prefix + 'corner.pdf')
-plt.savefig(prefix + 'corner.png')
+
+if not os.path.exists(prefix[:-1] + "_results"):
+    os.mkdir(prefix[:-1] + "_results")
+plt.savefig(prefix[:-1] + "_results/" + prefix + 'corner.pdf')
+plt.savefig(prefix[:-1] + "_results/" + prefix + 'corner.png')
 plt.close()
 
 # IMPORTING DATA
@@ -100,4 +103,4 @@ plt.plot(freq, residuals, 'b-')
 plt.title("Residuals (full range)")
 plt.xlabel("Frequency/MHz")
 plt.subplots_adjust(wspace=0.3)
-plt.savefig("model_vs_observed.png", dpi=200)
+plt.savefig(prefix[:-1] + "_results/" + prefix+"model_vs_observed.png", dpi=200)
