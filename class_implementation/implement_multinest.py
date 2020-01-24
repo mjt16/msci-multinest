@@ -10,6 +10,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 from pymultinest.solve import solve
 from pymultinest.analyse import Analyzer
 import os
+import sys
 try: os.mkdir('chains')
 except OSError: pass
 
@@ -18,7 +19,7 @@ class multinest_object():
     """
     A class to run multinest sampling for a given dataset, model, and priors
     """
-    def __init__(self, data, model, priors, loglike, output_prefix = "testoutput2-"): # might want to move loglike elsewhere
+    def __init__(self, data, model, priors, loglike, output_prefix = os.path.splitext(os.path.basename(sys.argv[0]))[0]+"-"):
         self.data = data
         self.model = model
         self.priors = priors
