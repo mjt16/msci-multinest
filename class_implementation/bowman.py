@@ -13,7 +13,7 @@ import implement_multinest as multi
 from math import pi
 import numpy as np
 
-# IMPORTING SIMULATED DATA
+# IMPORTING DATA
 data = np.loadtxt("edges.txt", delimiter=",")
 freq = data[0]
 signal = data[1]
@@ -31,7 +31,7 @@ def log_likelihood(cube): # log likelihood function
     denominator = 2*noise**2
     loglike = np.sum(np.log(normalise) - (numerator/denominator))
     return loglike
-    
+
 def prior(cube): # priors for model parameters
    for i in range(5):
       cube[i]=-20000+2*20000*(cube[i])
@@ -45,4 +45,3 @@ multinest_object = multi.multinest_object(data=signal, model=my_model, priors=pr
 
 if __name__ == "__main__":
     multinest_object.solve_multinest()
-
