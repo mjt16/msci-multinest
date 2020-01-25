@@ -88,19 +88,43 @@ mod_signal = mymodel.observation(final_vals)
 # CALCULATING RESIDUALS
 residuals = (obs_signal-mod_signal)
 
+# CREATING 'ZOOMED IN' PLOT
+names = model_runfile.my_model.labels
+for i,j in enumerate(names):
+    if j == "amp":
+        i_a = i
+    if j == "x0":
+        i_x0 = i
+    if j == "width":
+        i_w = i
+try:
+    a,x,w = final_vals[i_a],final_vals[i_x0],final_vals[i_w]
+except:
+    a,x,w = 0,0,0
+xmax,xmin = x+w,x-w
+ymid = mod_signal[i_x0]
+ymax,ymin = ymid+2*a,ymid-2*a
 # PLOTTING OBSERVED DATA VS. CONVERGED MODEL
 plt.figure(figsize=(20,10))
-plt.subplot(1,2,1)
+plt.subplot(1,3,1)
 plt.plot(freq, obs_signal, 'ro', label="observed")
 plt.plot(freq, mod_signal, 'b-', label="model")
 plt.legend()
 plt.title("Model vs. Observed (full range)")
 plt.xlabel("Frequency/MHz")
 plt.ylabel("Brightness Temperature/K")
-plt.xlabel("Frequency/MHz")
-plt.subplot(1,2,2)
+plt.subplot(1,3,2)
 plt.plot(freq, residuals, 'b-')
 plt.title("Residuals (full range)")
 plt.xlabel("Frequency/MHz")
+plt.subplot(1,3,3)
+plt.plot(freq, obs_signal, 'ro', label="observed")
+plt.plot(freq, mod_signal, 'b-', label="model")
+plt.legend()
+plt.title("Model vs. Observed (full range)")
+plt.xlabel("Frequency/MHz")
+plt.ylabel("Brightness Temperature/K")
+plt.xlim(xmin,xmax)
+plt.ylim(ymin,ymax)
 plt.subplots_adjust(wspace=0.3)
 plt.savefig(prefix[:-1] + "_results/" + prefix+"model_vs_observed.png", dpi=200)
