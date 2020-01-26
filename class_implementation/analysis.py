@@ -89,7 +89,7 @@ mod_signal = mymodel.observation(final_vals)
 residuals = (obs_signal-mod_signal)
 
 # CREATING 'ZOOMED IN' PLOT
-names = model_runfile.my_model.labels
+names = mymodel.labels
 for i,j in enumerate(names):
     if j == "amp":
         i_a = i
@@ -102,7 +102,8 @@ try:
 except:
     a,x,w = 0,0,0
 xmax,xmin = x+w,x-w
-ymid = mod_signal[i_x0]
+i_y = (numpy.abs(freq-x)).argmin()
+ymid = mod_signal[i_y]
 ymax,ymin = ymid+2*a,ymid-2*a
 # PLOTTING OBSERVED DATA VS. CONVERGED MODEL
 plt.figure(figsize=(20,10))
