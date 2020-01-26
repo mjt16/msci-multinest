@@ -104,7 +104,7 @@ except:
 xmax,xmin = x+w,x-w
 i_y = (numpy.abs(freq-x)).argmin()
 ymid = mod_signal[i_y]
-ymax,ymin = ymid+a,ymid-a
+ymax,ymin = ymid+20,ymid-20
 # PLOTTING OBSERVED DATA VS. CONVERGED MODEL
 plt.figure(figsize=(20,10))
 plt.subplot(1,3,1)
@@ -119,8 +119,8 @@ plt.plot(freq, residuals, 'b-')
 plt.title("Residuals (full range)")
 plt.xlabel("Frequency/MHz")
 plt.subplot(1,3,3)
-plt.plot(freq, obs_signal, 'r-', label="observed")
-plt.plot(freq, mod_signal, 'b-', label="model")
+plt.plot(freq, obs_signal, 'ro', label="observed")
+plt.plot(freq, mod_signal, 'bo', label="model")
 plt.legend()
 plt.title("Model vs. Observed (full range)")
 plt.xlabel("Frequency/MHz")
