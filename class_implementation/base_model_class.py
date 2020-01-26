@@ -58,6 +58,12 @@ class model:
         plt.ylabel("Brightness Temperature/K")
         plt.show()
 
+    def process(self, sky, theta):
+        """
+        Used to implement ionospheric/instrumental effects
+        """
+        return sky
+
     def foreground(self, theta):
         """
         Calculate foreground model

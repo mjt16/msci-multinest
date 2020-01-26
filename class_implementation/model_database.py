@@ -56,7 +56,7 @@ class bowman(bmc.model):
     Model used by Bowman in 2018 paper eq.2
 
     Requires parameters in form
-    theta = [a0, a1, a2, a3, a4, amp, x0, width, tau] 
+    theta = [a0, a1, a2, a3, a4, amp, x0, width, tau]
     """
 
     def __init__(self, freq):
@@ -95,12 +95,56 @@ class bowman(bmc.model):
         t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
         return t21
 
+# =============================================================================
+
+class bowmanphysical(bmc.model):
+    """
+    Model used by Bowman in 2018 paper eq.3
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, amp, x0, width, tau]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "physical polynomial"
+        self.name_sig = "flat gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","amp","x0","width","tau"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 4th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-4]
+        normfreq = self.freq/freq_0
+        pwr = -2.5 + coeffs[1] + coeffs[2]*np.log(normfreq)
+        fg = coeffs[0]*np.power(normfreq, pwr)*np.exp(-coeffs[3]*np.power(normfreq,-2)) + coeffs[4]*np.power(normfreq,-2)
+        return fg
+
+    def signal(self, theta):
+        """
+        Flattened Gaussian
+        """
+        amp = theta[-4]
+        x0 = theta[-3]
+        width = theta[-2]
+        tau = theta[-1]
+
+        B = (4.0 * ((self.freq - x0)**2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+
+        t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+        return t21
+
+# =============================================================================
+
 class hills_sine(bmc.model):
     """
     Model used by Hills in 2018
 
     Requires parameters in form
-    theta = [a0, a1, a2, a3, a4, a5, amp, phi, l] 
+    theta = [a0, a1, a2, a3, a4, a5, amp, phi, l]
     """
 
     def __init__(self, freq):
