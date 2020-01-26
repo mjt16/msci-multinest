@@ -101,7 +101,7 @@ try:
     a,x,w = final_vals[i_a],final_vals[i_x0],final_vals[i_w]
 except:
     a,x,w = 0,0,0
-xmax,xmin = x+w,x-w
+xmax,xmin = x+10*w,x-10*w
 i_y = (numpy.abs(freq-x)).argmin()
 ymid = mod_signal[i_y]
 ymax,ymin = ymid+20,ymid-20
