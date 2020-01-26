@@ -29,7 +29,7 @@ int_time = 1.6e8 # antennna integration time
 theta = [a0,a1,a2,a3,a4,sim_amp,sim_x0,sim_width]
 
 mockmodel = md.logpoly_plus_gaussian(freq) # this is the user defined model, see model_database.py for more models
-noise = np.random.normal(0, 10e-2, len(freq))
+noise = np.random.normal(0, 0.5*10e-2, len(freq))
 
 sim_signal = mockmodel.observation(theta) + noise
 
