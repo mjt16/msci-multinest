@@ -101,7 +101,7 @@ try:
     a,x,w = final_vals[i_a],final_vals[i_x0],final_vals[i_w]
 except:
     a,x,w = 0,0,0
-xmax,xmin = x+10*w,x-10*w
+xmax,xmin = x+w,x-w
 i_y = (numpy.abs(freq-x)).argmin()
 ymid = mod_signal[i_y]
 ymax,ymin = ymid+20,ymid-20
@@ -125,7 +125,7 @@ plt.legend()
 plt.title("Model vs. Observed (full range)")
 plt.xlabel("Frequency/MHz")
 plt.ylabel("Brightness Temperature/K")
-plt.xlim(xmin,xmax)
-plt.ylim(ymin,ymax)
+#plt.xlim((xmin,xmax))
+#plt.ylim((ymin,ymax))
 plt.subplots_adjust(wspace=0.3)
 plt.savefig(prefix[:-1] + "_results/" + prefix+"model_vs_observed.png", dpi=200)
