@@ -89,24 +89,9 @@ mod_signal = mymodel.observation(final_vals)
 residuals = (obs_signal-mod_signal)
 
 # CREATING 'ZOOMED IN' PLOT
-names = mymodel.labels
-for i,j in enumerate(names):
-    if j == "amp":
-        i_a = i
-    if j == "x0":
-        i_x0 = i
-    if j == "width":
-        i_w = i
-try:
-    a,x,w = final_vals[i_a],final_vals[i_x0],final_vals[i_w]
-except:
-    a,x,w = 0,0,0
-xmax,xmin = x+w,x-w
-#i_y = (numpy.abs(freq-x)).argmin()
-#ymid = mod_signal[i_y]
-#ymax,ymin = ymid+20,ymid-20
 mod_dip = mymodel.observation(final_vals, withFG=False)
 obs_dip = obs_signal - mymodel.observation(final_vals, withSIG=False)
+
 # PLOTTING OBSERVED DATA VS. CONVERGED MODEL
 plt.figure(figsize=(20,10))
 plt.subplot(1,3,1)
@@ -127,6 +112,6 @@ plt.legend()
 plt.title("Model vs. Observed (absorption feature)")
 plt.xlabel("Frequency/MHz")
 plt.ylabel("Brightness Temperature/K")
-plt.xlim((xmin,xmax))
+plt.xlim((70,80))
 plt.subplots_adjust(wspace=0.3)
 plt.savefig(prefix[:-1] + "_results/" + prefix+"model_vs_observed.png", dpi=200)
