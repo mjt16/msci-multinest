@@ -104,7 +104,7 @@ except:
 xmax,xmin = x+w,x-w
 i_y = (numpy.abs(freq-x)).argmin()
 ymid = mod_signal[i_y]
-ymax,ymin = ymid+2*a,ymid-2*a
+ymax,ymin = ymid+a,ymid-a
 # PLOTTING OBSERVED DATA VS. CONVERGED MODEL
 plt.figure(figsize=(20,10))
 plt.subplot(1,3,1)
