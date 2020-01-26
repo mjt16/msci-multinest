@@ -17,7 +17,7 @@ import numpy as np
 data = np.loadtxt("edges.txt", delimiter=",")
 freq = data[0]
 signal = data[1]
-noise = np.random.normal(0, 10e-2, len(freq))
+noise = np.random.normal(0, 0.5*10e-2, len(freq))
 
 # DEFINING MODEL
 my_model = md.bowman(freq) # model selected from model_database.py
@@ -34,9 +34,9 @@ def log_likelihood(cube): # log likelihood function
 
 def prior(cube): # priors for model parameters
    for i in range(5):
-      cube[i]=-10000+2*10000*(cube[i])
+      cube[i]=-2000+2*2000*(cube[i])
    cube[5]=2*cube[5]
-   cube[6]=100*cube[6]
+   cube[6]=90*cube[6]
    cube[7]=40*cube[7]
    cube[8]=10*cube[8]
    return cube
