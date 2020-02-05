@@ -42,7 +42,9 @@ class model:
         if withFG:
             fg = self.foreground(theta)
 
-        return sig + fg
+        sky = sig + fg
+ 
+        return process(sky, theta)       
 
     def plot_observation(self, theta, withFG=True, withSIG=True, style='b-'):
         """
