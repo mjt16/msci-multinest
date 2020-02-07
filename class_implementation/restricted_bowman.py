@@ -38,7 +38,7 @@ def prior(cube): # priors for model parameters
    cube[5]=2*cube[5]
    cube[6]=60 + 30*cube[6]
    cube[7]=40*cube[7]
-   cube[8]=10*cube[8]
+   cube[8]=15*cube[8]
    return cube
 
 multinest_object = multi.multinest_object(data=signal, model=my_model, priors=prior, loglike=log_likelihood)
