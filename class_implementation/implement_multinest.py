@@ -49,6 +49,10 @@ class multinest_object():
         import json
         if not os.path.exists(self.prefix): 
             os.mkdir(self.prefix)
+        else:
+            for i in os.listdir('.'):
+                shutil.rmtree(self.prefix)
+                os.mkdir(self.prefix)
         with open(os.path.join(self.prefix, '%sparams.json' % self.prefix), 'w') as f:
             json.dump(parameters, f, indent=2)
         if create_analyzer == True:

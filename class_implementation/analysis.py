@@ -14,7 +14,7 @@ import pymultinest
 import corner
 import model_database as md
 from importlib import import_module
-
+import shutil
 if len(sys.argv) != 2:
 	sys.stderr.write("""SYNOPSIS: %s <output-root> 
 
@@ -72,9 +72,14 @@ corner.corner(data[mask,:], weights=weights[mask],
 
 if not os.path.exists(prefix[:-1] + "_results"):
     os.mkdir(prefix[:-1] + "_results")
+else:
+    for i in os.listdir('.'):
+        shutil.rmtree(prefix[:-1] + "_results")
+        os.mkdir(prefix[:-1] + "_results")    
 plt.savefig(prefix[:-1] + "_results/" + prefix + 'corner.pdf')
 plt.savefig(prefix[:-1] + "_results/" + prefix + 'corner.png')
 plt.close()
+
 
 # IMPORTING DATA
 freq = model_runfile.freq

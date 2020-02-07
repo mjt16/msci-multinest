@@ -34,7 +34,7 @@ def log_likelihood(cube): # log likelihood function
 
 def prior(cube): # priors for model parameters
    for i in range(5):
-      cube[i]=-10000+2*10000*(cube[i])
+      cube[i]=-15000+2*15000*(cube[i])
    cube[5]=2*cube[5]
    cube[6]=90*cube[6]
    cube[7]=50*cube[7]

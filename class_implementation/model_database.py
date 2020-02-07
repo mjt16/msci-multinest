@@ -120,7 +120,7 @@ class bowman_physical(bmc.model):
         coeffs = theta[0:-4]
         normfreq = self.freq/freq_0
         #pwr = -2.5 + coeffs[1] + coeffs[2]*np.log(normfreq)
-        fg = coeffs[0]*np.power(normfreq,-2.5) + coeffs[1]*np.power(normfreq, -2.5) * np.log(normfreq) + coeffs[2]* np.power(normfreq,-2.5)*np.power(np.log(normfreq), 2.0) + coeffs[3]*np.power(normfreq, -4.5) + coeffs[4] * np.power (normfreq, -2.0)
+        fg = coeffs[0]*np.power(normfreq,-2.5) + coeffs[1]*np.power(normfreq, -2.5)*np.log(normfreq) + coeffs[2]*np.power(normfreq,-2.5)*np.power(np.log(normfreq), 2.0) + coeffs[3]*np.power(normfreq, -4.5) + coeffs[4]*np.power(normfreq, -2.0)
         #fg = coeffs[0]*np.power(normfreq, pwr)*np.exp(-coeffs[3]*np.power(normfreq,-2)) + coeffs[4]*np.power(normfreq,-2)
         return fg
 
