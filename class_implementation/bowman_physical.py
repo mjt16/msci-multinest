@@ -36,7 +36,7 @@ def prior(cube): # priors for model parameters
    for i in range(5):
       cube[i]=-15000+2*15000*(cube[i])
    cube[5]=2*cube[5]
-   cube[6]=90*cube[6]
+   cube[6]=60 + 90*cube[6]
    cube[7]=50*cube[7]
    cube[8]=15*cube[8]
    return cube
