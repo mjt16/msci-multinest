@@ -44,7 +44,7 @@ class model:
 
         sky = sig + fg
  
-        return process(sky, theta)       
+        return self.process(sky, theta)       
 
     def plot_observation(self, theta, withFG=True, withSIG=True, style='b-'):
         """

@@ -17,10 +17,10 @@ import numpy as np
 data = np.loadtxt("edges.txt", delimiter=",")
 freq = data[0]
 signal = data[1]
-noise = np.random.normal(0, 0.5*10e-2, len(freq))
+noise = np.random.normal(0, 0.5*10e-2, len(freq)) # this might be redundant, adjust code
 
 # DEFINING MODEL
-my_model = md.bowmanphysical(freq) # model selected from model_database.py
+my_model = md.bowman_physical(freq) # model selected from model_database.py
 
 # DEFINING LOG LIKELIHOOD AND PRIORS
 def log_likelihood(cube): # log likelihood function
