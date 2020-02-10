@@ -20,11 +20,11 @@ signal = data[1]
 noise = np.random.normal(0, 0.5*10e-2, len(freq))
 
 # DEFINING MODEL
-my_model = md.hills_physical(freq) # model selected from model_database.py
+my_model = md.hills_linear(freq) # model selected from model_database.py
 
 # DEFINING LOG LIKELIHOOD AND PRIORS
 def log_likelihood(cube): # log likelihood function
-    b0, b1, b2, b3, Te, amp, x0, width, tau = cube
+    b0, b1, b2, b3, b4, amp, x0, width, tau = cube
     model = my_model.observation(cube)
     normalise = 1/(np.sqrt(2*pi*noise**2))
     numerator = (signal - model)**2 # likelihood depends on difference between model and observed temperature in each frequency bin
@@ -36,7 +36,7 @@ def prior(cube): # priors for model parameters
    cube[0]= 10000*cube[0]
    for i in range(1,4):
       cube[i]=-10+2*10*(cube[i])
-   cube[4]=200 + 1800*cube[4]
+   cube[4]=-10000 + 2*10000*cube[4]
    cube[5]=2*cube[5]
    cube[6]=90*cube[6]
    cube[7]=40*cube[7]

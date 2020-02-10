@@ -114,7 +114,7 @@ class bowman_physical(bmc.model):
 
     def foreground(self, theta):
         """
-        Linear polynomial foreground up to 4th order
+        Physical foreground model
         """
         freq_0 = 75.0
         coeffs = theta[0:-4]
@@ -122,6 +122,90 @@ class bowman_physical(bmc.model):
         #pwr = -2.5 + coeffs[1] + coeffs[2]*np.log(normfreq)
         fg = coeffs[0]*np.power(normfreq,-2.5) + coeffs[1]*np.power(normfreq, -2.5)*np.log(normfreq) + coeffs[2]*np.power(normfreq,-2.5)*np.power(np.log(normfreq), 2.0) + coeffs[3]*np.power(normfreq, -4.5) + coeffs[4]*np.power(normfreq, -2.0)
         #fg = coeffs[0]*np.power(normfreq, pwr)*np.exp(-coeffs[3]*np.power(normfreq,-2)) + coeffs[4]*np.power(normfreq,-2)
+        return fg
+
+    def signal(self, theta):
+        """
+        Flattened Gaussian
+        """
+        amp = theta[-4]
+        x0 = theta[-3]
+        width = theta[-2]
+        tau = theta[-1]
+
+        B = (4.0 * ((self.freq - x0)**2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+
+        t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+        return t21
+
+# =============================================================================
+
+class hills_physical(bmc.model):
+    """
+    Model used by Hills in 2019 paper eq.6
+
+    Requires parameters in form
+    theta = [b0, b1, b2, b3, Te, amp, x0, width, tau]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "physical polynomial + ionosphere"
+        self.name_sig = "flat gaussian"
+        self.labels = ["b0","b1","b2","b3","Te","amp","x0","width","tau"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Physical foreground model
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-4]
+        normfreq = self.freq/freq_0
+        pwr = -2.5 + coeffs[1] + coeffs[2]*np.log(normfreq)
+        fg = coeffs[0]*np.power(normfreq, pwr)*np.exp(-coeffs[3]*np.power(normfreq,-2.0)) + coeffs[4]*(1 - np.exp(-coeffs[3]*np.power(normfreq, -2.0)))
+        return fg
+
+    def signal(self, theta):
+        """
+        Flattened Gaussian
+        """
+        amp = theta[-4]
+        x0 = theta[-3]
+        width = theta[-2]
+        tau = theta[-1]
+
+        B = (4.0 * ((self.freq - x0)**2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+
+        t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+        return t21
+
+# =============================================================================
+
+class hills_linear(bmc.model):
+    """
+    Model used by Hills in 2019 paper eq.6
+
+    Requires parameters in form
+    theta = [b0, b1, b2, b3, b4, amp, x0, width, tau]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "physical polynomial + ionosphere"
+        self.name_sig = "flat gaussian"
+        self.labels = ["b0","b1","b2","b3","b4","amp","x0","width","tau"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linearised physical foreground model
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-4]
+        normfreq = self.freq/freq_0
+        pwr = -2.5 + coeffs[1] + coeffs[2]*np.log(normfreq)
+        fg = coeffs[0]*np.power(normfreq, pwr)*np.exp(-coeffs[3]*np.power(normfreq,-2.0)) + coeffs[4]*(np.power(normfreq, -2.0))
         return fg
 
     def signal(self, theta):
