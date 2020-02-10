@@ -17,7 +17,8 @@ import numpy as np
 data = np.loadtxt("edges.txt", delimiter=",")
 freq = data[0]
 signal = data[1]
-noise = np.random.normal(0, 0.5*10e-2, len(freq))
+t_int = 24*60*60 # 24 hour integration time
+noise = signal/(((data[1]-data[0])*t_int)**0.5)
 
 # DEFINING MODEL
 my_model = md.bowman(freq) # model selected from model_database.py
