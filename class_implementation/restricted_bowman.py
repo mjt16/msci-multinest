@@ -17,9 +17,9 @@ import numpy as np
 data = np.loadtxt("edges_restricted.txt", delimiter=",")
 freq = data[0]
 signal = data[1]
-#noise = np.random.normal(0, 0.5*10e-2, len(freq))
-t_int = 60*60*107 # 107 hours integration time from Sims et. al 2019
-noise = signal/(((data[1]-data[0])*t_int)**0.5)
+noise = np.random.normal(0, 0.5*10e-2, len(freq))
+#t_int = 60*60*107 # 107 hours integration time from Sims et. al 2019
+#noise = signal/(((data[1]-data[0])*t_int)**0.5)
 
 
 # DEFINING MODEL
@@ -38,10 +38,10 @@ def log_likelihood(cube): # log likelihood function
 def prior(cube): # priors for model parameters
    for i in range(5):
       cube[i]=-5000+2*5000*(cube[i])
-   cube[5]=2*cube[5]
+   cube[5]=1*cube[5]
    cube[6]=60 + 30*cube[6]
    cube[7]=40*cube[7]
-   cube[8]=-15 + 2*15*cube[8]
+   cube[8]=10*cube[8]
    return cube
 
 multinest_object = multi.multinest_object(data=signal, model=my_model, priors=prior, loglike=log_likelihood)
