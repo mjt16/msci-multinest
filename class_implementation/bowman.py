@@ -17,8 +17,10 @@ import numpy as np
 data = np.loadtxt("edges.txt", delimiter=",")
 freq = data[0]
 signal = data[1]
-t_int = 24*60*60 # 24 hour integration time
+#t_int = 24*60*60 # 24 hour integration time
+t_int = 60*60*107 # 107 hours integration time from Sims et. al 2019
 noise = signal/(((data[1]-data[0])*t_int)**0.5)
+#noise = signal/3.879*100 #noise from Sims et. al 2019
 
 # DEFINING MODEL
 my_model = md.bowman(freq) # model selected from model_database.py
@@ -37,7 +39,7 @@ def prior(cube): # priors for model parameters
    for i in range(5):
       cube[i]=-2000+2*2000*(cube[i])
    cube[5]=2*cube[5]
-   cube[6]=90*cube[6]
+   cube[6]=60 + 30*cube[6]
    cube[7]=40*cube[7]
    cube[8]=10*cube[8]
    return cube
