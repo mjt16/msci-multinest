@@ -20,6 +20,7 @@ signal = data[1]
 #noise = np.random.normal(0, 0.5*10e-2, len(freq))
 t_int = 60*60*107 # 107 hours integration time from Sims et. al 2019
 noise = signal/(((data[1]-data[0])*t_int)**0.5)
+#noise = (signal + 200)/3.879*10**5
 
 # DEFINING MODEL
 my_model = md.hills_sine(freq) # model selected from model_database.py
