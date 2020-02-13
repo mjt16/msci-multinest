@@ -55,10 +55,11 @@ class multinest_object():
                 os.mkdir(self.prefix)
         with open(os.path.join(self.prefix, '%sparams.json' % self.prefix), 'w') as f:
             json.dump(parameters, f, indent=2)
+        for i in os.listdir('.'):
+            if i.startswith(self.prefix):
+                if os.path.isfile(i):
+                    shutil.move(i,self.prefix+"/")
         if create_analyzer == True:
             self.analyzer = Analyzer(n_params, outputfiles_basename=self.prefix)
-        for i in os.listdir('.'):
-            if self.prefix in i:
-                shutil.move(i,self.prefix+"/")
     def get_mode_stats(self):
         return self.analyzer.get_mode_stats()        
