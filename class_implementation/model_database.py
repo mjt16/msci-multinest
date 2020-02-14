@@ -513,5 +513,59 @@ class freenoise_hills_sine(bmc.model):
         return noise
 
 
+# =============================================================================
+
+class freenoise_hills_6th(bmc.model):
+    """
+    Model used by Hills in 2018
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, a5, amp, phi, l, noise]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_5th"
+        self.name_sig = "sine function"
+        self.labels = ["a0","a1","a2","a3","a4","a5","amp","x0","width","tau","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 5th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-5]
+        l = len(coeffs)
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5, 2.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def signal(self, theta):
+        """
+        Flattened Gaussian
+        """
+        amp = theta[-5]
+        x0 = theta[-4]
+        width = theta[-3]
+        tau = theta[-2]
+
+        B = (4.0 * ((self.freq - x0)**2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+
+        t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+        return t21
+
+    def noise(self, theta):
+        """
+        Noise free parameter
+        """
+        noise = theta[-1]
+        return noise
+
+
 
 # add more models here
