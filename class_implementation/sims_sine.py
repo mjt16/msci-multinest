@@ -38,8 +38,8 @@ def prior(cube): # priors for model parameters
    for i in range(5):
       cube[i]=-5000+2*5000*(cube[i])
    for i in range(5,7):
-      cube[i] = -10 + 12*cube[i]
-   cube[7] = -4 + 2*4*cube[7]
+      cube[i] = -10 + 2*10*cube[i]
+   cube[7] = -10 + 2*10*cube[7]
    cube[8] = -10 + 2*10* cube[8]
    cube[9]=2*cube[9]
    cube[10]=60 + 30*cube[10]
