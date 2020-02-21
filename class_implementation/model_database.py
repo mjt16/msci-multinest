@@ -566,6 +566,58 @@ class freenoise_hills_6th(bmc.model):
         noise = theta[-1]
         return noise
 
+# =============================================================================
+
+class sims_sine(bmc.model):
+    """
+    Model used by Sims in 2019
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, acal0, acal1, b, P, amp, x0, width, tau]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_4th + calibration"
+        self.name_sig = "flat gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","acal0","acal1","b","P","amp","x0","width","tau"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 4th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-8]
+        acal0 = theta[-8]
+        acal1 = theta[-7]
+        b = theta[-6]
+        P = theta[-5]
+        l = len(coeffs)
+        pw = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, pw)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        cal = np.power(self.freq/freq_0, b)*(acal0*np.sin(2*np.pi*self.freq/P) + acal1*np.cos(2*np.pi*self.freq/P))
+        return fg + cal
+
+    def signal(self, theta):
+        """
+        Flattened Gaussian
+        """
+        amp = theta[-4]
+        x0 = theta[-3]
+        width = theta[-2]
+        tau = theta[-1]
+
+        B = (4.0 * ((self.freq - x0)**2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+
+        t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+        return t21
+
+
 
 
 # add more models here
