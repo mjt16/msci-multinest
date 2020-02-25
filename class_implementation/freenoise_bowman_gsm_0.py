@@ -31,7 +31,7 @@ def log_likelihood(cube): # log likelihood function
     denominator = 2*cube[-1]**2
     loglike = np.sum(np.log(normalise) - (numerator/denominator))
     return loglike
-
+#this is a test string, ignore
 def prior(cube): # priors for model parameters
    for i in range(5):
       cube[i]=-4500+2*4500*(cube[i])
