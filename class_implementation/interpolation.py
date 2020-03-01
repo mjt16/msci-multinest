@@ -9,7 +9,7 @@ from scipy.interpolate import CubicSpline
 import numpy as np
 
 # import data
-data = np.loadtxt("0_full_1w_sim.txt", delimiter=",")
+data = np.loadtxt("0_foreground_1w_sim.txt", delimiter=",")
 freq = data[0]
 signal = data[1]
    
@@ -24,7 +24,7 @@ for i in range(len(new_freq)):
     
 data = np.array([new_freq, new_sig])
 
-np.savetxt("0_full_1w_sim.txt", data, delimiter=",")
+np.savetxt("0_foreground_1w_sim.txt", data, delimiter=",")
     
 
     
