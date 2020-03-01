@@ -14,10 +14,10 @@ from math import pi
 import numpy as np
 
 # IMPORTING DATA
-data_1 = np.loadtxt("0_full_sim.txt", delimiter=",")
-data_2 = np.loadtxt("6_full_sim.txt", delimiter=",")
-data_3 = np.loadtxt("12_full_sim.txt", delimiter=",")
-data_4 = np.loadtxt("18_full_sim.txt", delimiter=",")
+data_1 = np.loadtxt("0_full_4w_sim.txt", delimiter=",")
+data_2 = np.loadtxt("6_full_4w_sim.txt", delimiter=",")
+data_3 = np.loadtxt("12_full_4w_sim.txt", delimiter=",")
+data_4 = np.loadtxt("18_full_4w_sim.txt", delimiter=",")
 freq = data_1[0]
 signal_1 = data_1[1]
 signal_2 = data_2[1]
@@ -57,9 +57,9 @@ def log_likelihood(cube): # log likelihood function
 def prior(cube): # priors for model parameters
    for i in range(20):
       cube[i]=-2000+2*2000*(cube[i])
-   cube[10]=2*cube[10]
-   cube[11]=100*cube[11]
-   cube[12]=30*cube[12]
+   cube[20]=2*cube[20]
+   cube[21]=100*cube[21]
+   cube[22]=30*cube[22]
    return cube
 
 multinest_object = multi.multinest_object(data=signal, model=my_model, priors=prior, loglike=log_likelihood)
