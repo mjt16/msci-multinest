@@ -617,6 +617,49 @@ class sims_sine(bmc.model):
         t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
         return t21
 
+class multi_fg(bmc.model):
+    """
+    Multiple foregrounds with same signal
+
+    Requires parameters in form
+    theta = [a0,a1,a2,a3,a4,b0,b1,b2,b3,b4,amp,x0,width]
+    """
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "log_poly_4"
+        self.name_sig = "gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","b0","b1","b2","b3","b4","amp","x0","width"]
+        pass
+
+    def foregrounds(self, theta):
+        """
+        Log polynomial foreground up to 4th order
+        """
+        freq_0 = 75 # SORT THIS OUT!!! pivot scale
+        coeffs = [theta[0:5],theta[5:10]]
+        l = len(coeffs[0])
+        p = np.arange(0,l,1)
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        log_arr = np.log(normfreq)
+        pwrs = np.power(log_arr, p)
+        ctp_0 = coeffs[0]*pwrs
+        ctp_1 = coeffs[1]*pwrs
+        log_t_0 = np.sum(ctp_0,(1))
+        log_t_1 = np.sum(ctp_1,(1))
+        fg_0 = np.exp(log_t_0)
+        fg_1 = np.exp(log_t_1)
+        fg = [fg_0,fg_1]
+        return fg
+
+    def signal(self, theta): # signal 21cm absorption dip, defined as a negative gaussian
+        amp = theta[-3]
+        x0 = theta[-2]
+        width = theta[-1]
+        t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
+        return t21
+
+# =============================================================================
 
 
 
