@@ -619,7 +619,56 @@ class sims_sine(bmc.model):
 
 class multi_fg(bmc.model):
     """
+<<<<<<< HEAD
+    Model used by Bowman in 2018 paper eq.2
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, b0, b1, b2, b3, b4, amp, x0, width]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial"
+        self.name_sig = "gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","b0", "b1", "b2", "b3","b4","amp","x0","width"]
+        pass
+
+    def foregrounds(self, theta):
+        """
+        Linear polynomial foreground up to 4th order
+        """
+        freq_0 = 75.0
+        coeffs = [theta[0:5], theta[5:10]]
+        l = len(coeffs[0])
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp0 = coeffs[0]*pwrs
+        log_fg0 = np.sum(ctp0, (1))
+        fg0 = np.exp(log_fg0)
+        ctp1 = coeffs[0]*pwrs
+        log_fg1 = np.sum(ctp1, (1))
+        fg1 = np.exp(log_fg1)
+        fg = [fg0, fg1]
+        return fg
+
+    def signal(self, theta): # signal 21cm absorption dip, defined as a negative gaussian
+        amp = theta[-3]
+        x0 = theta[-2]
+        width = theta[-1]
+        t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
+        return t21
+
+
+# =============================================================================
+
+class multi_fg_4(bmc.model):
+    """
+    Model used by Bowman in 2018 paper eq.2
+=======
     Multiple foregrounds with same signal
+>>>>>>> 89bbb4eae6f9e2dafb4501a53159078e40228d9c
 
     Requires parameters in form
     theta = [a0,a1,a2,a3,a4,b0,b1,b2,b3,b4,amp,x0,width]
@@ -628,13 +677,39 @@ class multi_fg(bmc.model):
         self.freq = freq
         self.name_fg = "log_poly_4"
         self.name_sig = "gaussian"
+<<<<<<< HEAD
+        self.labels = ["a0","a1","a2","a3","a4","b0", "b1", "b2", "b3","b4","c0","c1","c2","c3","c4","d0","d1","d2","d3","d4","amp","x0","width"]
+=======
         self.labels = ["a0","a1","a2","a3","a4","b0","b1","b2","b3","b4","amp","x0","width"]
+>>>>>>> 89bbb4eae6f9e2dafb4501a53159078e40228d9c
         pass
 
     def foregrounds(self, theta):
         """
         Log polynomial foreground up to 4th order
         """
+<<<<<<< HEAD
+        freq_0 = 75.0
+        coeffs = [theta[0:5],theta[5:10],theta[10:15],theta[15:20]]
+        l = len(coeffs[0])
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp0 = coeffs[0]*pwrs
+        log_fg0 = np.sum(ctp0, (1))
+        fg0 = np.exp(log_fg0)
+        ctp1 = coeffs[1]*pwrs
+        log_fg1 = np.sum(ctp1, (1))
+        fg1 = np.exp(log_fg1)
+        ctp2 = coeffs[2]*pwrs
+        log_fg2 = np.sum(ctp2, (1))
+        fg2 = np.exp(log_fg2)
+        ctp3 = coeffs[3]*pwrs
+        log_fg3 = np.sum(ctp3, (1))
+        fg3 = np.exp(log_fg3)
+        fg = [fg0, fg1, fg2, fg3]
+=======
         freq_0 = 75 # SORT THIS OUT!!! pivot scale
         coeffs = [theta[0:5],theta[5:10]]
         l = len(coeffs[0])
@@ -650,6 +725,7 @@ class multi_fg(bmc.model):
         fg_0 = np.exp(log_t_0)
         fg_1 = np.exp(log_t_1)
         fg = [fg_0,fg_1]
+>>>>>>> 89bbb4eae6f9e2dafb4501a53159078e40228d9c
         return fg
 
     def signal(self, theta): # signal 21cm absorption dip, defined as a negative gaussian
@@ -689,7 +765,8 @@ class multi_fg_1(bmc.model):
         normfreq = freq_arr/freq_0
         pwrs = np.power(normfreq, p)
         ctp = coeffs*pwrs
-        fg = np.sum(ctp, (1))
+        log_fg = np.sum(ctp, (1))
+        fg = np.exp(log_fg)
         return fg
 
     def signal(self, theta): # signal 21cm absorption dip, defined as a negative gaussian
