@@ -659,7 +659,45 @@ class multi_fg(bmc.model):
         t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
         return t21
 
+
 # =============================================================================
+
+class multi_fg_1(bmc.model):
+    """
+    Model used by Bowman in 2018 paper eq.2
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, amp, x0, width]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial"
+        self.name_sig = "gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","amp","x0","width"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 4th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-3]
+        l = len(coeffs)
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def signal(self, theta): # signal 21cm absorption dip, defined as a negative gaussian
+        amp = theta[-3]
+        x0 = theta[-2]
+        width = theta[-1]
+        t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
+        return t21
 
 
 
