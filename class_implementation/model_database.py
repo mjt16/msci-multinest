@@ -915,6 +915,43 @@ class freenoise_5th_nosig(bmc.model):
         noise = theta[-1]
         return noise
 
+# =================================================================================================
 
+class freenoise_7th_nosig(bmc.model):
+    """
+    Model used by Hills in 2018
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, a5, a6, noise]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_5th"
+        self.name_sig = "sine function"
+        self.labels = ["a0","a1","a2","a3","a4","a5","a6","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 6th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-1]
+        l = len(coeffs)
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def noise(self, theta):
+        """
+        Noise free parameter
+        """
+        noise = theta[-1]
+        return noise
 
 # add more models here
