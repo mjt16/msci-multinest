@@ -750,6 +750,171 @@ class multi_fg_1(bmc.model):
         t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
         return t21
 
+# =================================================================================================
+
+class freenoise_logpoly_plus_gaussian(bmc.model):
+    """
+    A log polynomial foreground up to 4th order
+    and a gaussian absorption for 21cm signal
+
+    Requires parameters in form
+    theta = [a0,a1,a2,a3,a4,amp,x0,width,noise]
+    """
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "log_poly_4"
+        self.name_sig = "gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","amp","x0","width","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Log polynomial foreground up to 4th order
+        """
+        freq_0 = 75 
+        coeffs = theta[0:-4]
+        l = len(coeffs)
+        p = np.arange(0,l,1)
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        log_arr = np.log(normfreq)
+        pwrs = np.power(log_arr, p)
+        ctp = coeffs*pwrs
+        log_t = np.sum(ctp,(1))
+        fg = np.exp(log_t)
+        return fg
+
+    def signal(self, theta): # signal 21cm absorption dip, defined as a negative gaussian
+        amp = theta[-4]
+        x0 = theta[-3]
+        width = theta[-2]
+        t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
+        return t21
+
+
+    def noise(self, theta):
+        """
+        Noise free parameter
+        """
+        noise = theta[-1]
+        return noise
+
+# =================================================================================================
+
+class freenoise_6th_nosig(bmc.model):
+    """
+    Model used by Hills in 2018
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, a5, noise]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_5th"
+        self.name_sig = "sine function"
+        self.labels = ["a0","a1","a2","a3","a4","a5","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 5th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-1]
+        l = len(coeffs)
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5, 2.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def noise(self, theta):
+        """
+        Noise free parameter
+        """
+        noise = theta[-1]
+        return noise
+# =================================================================================================
+
+class freenoise_4th_nosig(bmc.model):
+    """
+    Model used by Hills in 2018
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, noise]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_3th"
+        self.name_sig = "sine function"
+        self.labels = ["a0","a1","a2","a3","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 5th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-1]
+        l = len(coeffs)
+        p = np.array([-2.5, -1.5, -0.5, -0.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def noise(self, theta):
+        """
+        Noise free parameter
+        """
+        noise = theta[-1]
+        return noise
+
+# =================================================================================================
+
+class freenoise_5th_nosig(bmc.model):
+    """
+    Model used by Hills in 2018
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, noise]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_4th"
+        self.name_sig = "sine function"
+        self.labels = ["a0","a1","a2","a3","a4","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 5th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-1]
+        l = len(coeffs)
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def noise(self, theta):
+        """
+        Noise free parameter
+        """
+        noise = theta[-1]
+        return noise
+
 
 
 # add more models here
