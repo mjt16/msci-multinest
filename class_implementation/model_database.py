@@ -861,7 +861,7 @@ class freenoise_4th_nosig(bmc.model):
         freq_0 = 75.0
         coeffs = theta[0:-1]
         l = len(coeffs)
-        p = np.array([-2.5, -1.5, -0.5, -0.5])
+        p = np.array([-2.5, -1.5, -0.5, 0.5])
         freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
         normfreq = freq_arr/freq_0
         pwrs = np.power(normfreq, p)
