@@ -46,7 +46,7 @@ class logpoly_plus_gaussian(bmc.model):
         amp = theta[-3]
         x0 = theta[-2]
         width = theta[-1]
-        t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
+        t21 = -amp*np.exp((-4*np.log(2)*(self.freq-x0)**2)/(width**2))
         return t21
 
 # =============================================================================
@@ -788,7 +788,9 @@ class freenoise_logpoly_plus_gaussian(bmc.model):
         amp = theta[-4]
         x0 = theta[-3]
         width = theta[-2]
-        t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
+        
+        t21 = -amp*np.exp((-4*np.log(2)*(self.freq-x0)**2)/(width**2))
+
         return t21
 
 
@@ -953,5 +955,118 @@ class freenoise_7th_nosig(bmc.model):
         """
         noise = theta[-1]
         return noise
+
+# =============================================================================
+
+class freenoise_sims_sine(bmc.model):
+    """
+    Model used by Sims in 2019
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, acal0, acal1, b, P, amp, x0, width, tau]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_4th + calibration"
+        self.name_sig = "flat gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","acal0","acal1","b","P","amp","x0","width","tau","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 4th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:5]
+        acal0 = theta[5]
+        acal1 = theta[6]
+        b = theta[7]
+        P = theta[8]
+        l = len(coeffs)
+        pw = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, pw)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        cal = np.power(self.freq/freq_0, b)*(acal0*np.sin(2*np.pi*self.freq/P) + acal1*np.cos(2*np.pi*self.freq/P))
+        return fg + cal
+
+    def signal(self, theta):
+        """
+        Flattened Gaussian
+        """
+        amp = theta[-5]
+        x0 = theta[-4]
+        width = theta[-3]
+        tau = theta[-2]
+
+        B = (4.0 * ((self.freq - x0)**2.0)/width**2) * np.log(-np.log((1.0 + np.exp(-tau))/2.0)/tau)
+
+        t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
+        return t21
+
+    def noise(self, theta):
+        """
+        Noise free parameter
+        """
+        noise = theta[-1]
+        return noise
+
+
+# =============================================================================
+
+class freenoise_sims_sine_nosig(bmc.model):
+    """
+    Model used by Sims in 2019
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, acal0, acal1, b, P, noise]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_4th + calibration"
+        self.name_sig = "flat gaussian"
+        self.labels = ["a0","a1","a2","a3","a4","acal0","acal1","b","P","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 4th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:5]
+        l = len(coeffs)
+        pw = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, pw)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def signal(self, theta):
+        """
+        Calibration temperature
+        """
+        freq_0 = 75.0
+        acal0 = theta[5]
+        acal1 = theta[6]
+        b = theta[7]
+        P = theta[8]
+
+        t21 = np.power(self.freq/freq_0, b)*(acal0*np.sin(2*np.pi*self.freq/P) + acal1*np.cos(2*np.pi*self.freq/P))
+        return t21
+
+    def noise(self, theta):
+        """
+        Noise as a free parameter
+        """
+        noise = theta[-1]
+        return noise
+
+
 
 # add more models here
