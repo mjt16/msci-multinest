@@ -617,6 +617,8 @@ class sims_sine(bmc.model):
         t21 =  -amp * (1.0 - np.exp(-tau * np.exp(B)))/(1.0 - np.exp(-tau))
         return t21
 
+# ================================================================================================================
+
 class multi_fg(bmc.model):
     """
     Model used by Bowman in 2018 paper eq.2
@@ -639,14 +641,15 @@ class multi_fg(bmc.model):
         freq_0 = 75.0
         coeffs = [theta[0:5], theta[5:10]]
         l = len(coeffs[0])
-        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        p = np.arange(0,l,1)
         freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
         normfreq = freq_arr/freq_0
-        pwrs = np.power(normfreq, p)
+        log_arr = np.log(normfreq)
+        pwrs = np.power(log_arr, p)
         ctp0 = coeffs[0]*pwrs
         log_fg0 = np.sum(ctp0, (1))
         fg0 = np.exp(log_fg0)
-        ctp1 = coeffs[0]*pwrs
+        ctp1 = coeffs[1]*pwrs
         log_fg1 = np.sum(ctp1, (1))
         fg1 = np.exp(log_fg1)
         fg = [fg0, fg1]
@@ -656,7 +659,7 @@ class multi_fg(bmc.model):
         amp = theta[-3]
         x0 = theta[-2]
         width = theta[-1]
-        t21 = -amp*np.exp((-(self.freq-x0)**2)/(2*width**2))
+        t21 = -amp*np.exp((-4*np.log(2)*(self.freq-x0)**2)/(width**2))
         return t21
 
 
@@ -683,10 +686,11 @@ class multi_fg_4(bmc.model):
         freq_0 = 75.0
         coeffs = [theta[0:5],theta[5:10],theta[10:15],theta[15:20]]
         l = len(coeffs[0])
-        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        p = np.arange(0,l,1)
         freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
         normfreq = freq_arr/freq_0
-        pwrs = np.power(normfreq, p)
+        log_arr = np.log(normfreq)
+        pwrs = np.power(log_arr, p)
         ctp0 = coeffs[0]*pwrs
         log_fg0 = np.sum(ctp0, (1))
         fg0 = np.exp(log_fg0)
@@ -1066,6 +1070,57 @@ class freenoise_sims_sine_nosig(bmc.model):
         """
         noise = theta[-1]
         return noise
+
+# ============================================================================================================
+
+class freenoise_hills_sine_5th(bmc.model):
+    """
+    Model used by Hills in 2018
+
+    Requires parameters in form
+    theta = [a0, a1, a2, a3, a4, amp, phi, l, noise]
+    """
+
+    def __init__(self, freq):
+        self.freq = freq
+        self.name_fg = "polynomial_5th"
+        self.name_sig = "sine function"
+        self.labels = ["a0","a1","a2","a3","a4","amp","phi","l","noise"]
+        pass
+
+    def foreground(self, theta):
+        """
+        Linear polynomial foreground up to 4th order
+        """
+        freq_0 = 75.0
+        coeffs = theta[0:-4]
+        l = len(coeffs)
+        p = np.array([-2.5, -1.5, -0.5, 0.5, 1.5])
+        freq_arr = np.transpose(np.multiply.outer(np.full(l,1), self.freq))
+        normfreq = freq_arr/freq_0
+        pwrs = np.power(normfreq, p)
+        ctp = coeffs*pwrs
+        fg = np.sum(ctp, (1))
+        return fg
+
+    def signal(self, theta):
+        """
+        Sine function
+        """
+        amp = theta[-4]
+        phi = theta[-3]
+        l = theta[-2]
+
+        t21 =  amp * np.sin(2*np.pi*self.freq/l + phi)
+        return t21
+
+    def noise(self, theta):
+        """
+        Noise free parameter
+        """
+        noise = theta[-1]
+        return noise
+
 
 
 
